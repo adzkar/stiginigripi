@@ -24,10 +24,10 @@ def sliding(image, right=0, down=0):
 	else:
 		return image
 
-def text2img(text,height,width):
+def text2img(text,height,width, font_size = 24):
 	img = Image.new('RGB', (height, width), color = (255,255,255))
 	d = ImageDraw.Draw(img)
-	font = ImageFont.truetype('impact.ttf', 24)
+	font = ImageFont.truetype('impact.ttf', font_size)
 	d.text((0,0), text, fill = (0,0,0), font=font)
 	return img
 
@@ -144,6 +144,12 @@ def merge_image(image1,image2):
 			pixels_new[i,j] = binToInt(rgb)
 	return new_image
 
+def directly_merge(image, text):
+	image = image.copy()
+	width, height = image.size
+	text_image = text2img(text, int(width*0.8), int(height*0.8), int(height * 0.4))
+	return merge_image(image,text_image)
+
 def getPlane(img, channel, index = 0):
 	if channel in img.mode:
 		new_image = Image.new('1', img.size)
@@ -218,6 +224,14 @@ def cli(message, height, width, output, zoom_in, sliding_right, sliding_bottom, 
 		img1 = Image.open(source)
 		img2 = Image.open(merge)
 		new_image = merge_image(img1,img2)
+		output = output if output != '' else 'merged'
+		new_image.save('{}.jpg'.format(output))
+		click.echo('created {}.jpg'.format(output))
+
+	#directly merge with message
+	if merge != None and message != None:
+		image = Image.open(merge)
+		new_image = directly_merge(image, message)
 		output = output if output != '' else 'merged'
 		new_image.save('{}.jpg'.format(output))
 		click.echo('created {}.jpg'.format(output))
