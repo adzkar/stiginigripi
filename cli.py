@@ -24,8 +24,8 @@ def sliding(image, right=0, down=0):
 	else:
 		return image
 
-def text2img(text,height,width, font_size = 24):
-	img = Image.new('RGB', (height, width), color = (255,255,255))
+def text2img(text,width,height, font_size = 24):
+	img = Image.new('RGB', (width, height), color = (255,255,255))
 	d = ImageDraw.Draw(img)
 	font = ImageFont.truetype('impact.ttf', font_size)
 	d.text((0,0), text, fill = (0,0,0), font=font)
